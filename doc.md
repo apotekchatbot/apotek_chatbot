@@ -151,16 +151,25 @@ GOOGLE_SERVICE_ACCOUNT_AUTH_PROVIDER_X509_CERT_URL= ""
 GOOGLE_SERVICE_ACCOUNT_CLIENT_X509_CERT_URL= ""
 GOOGLE_SERVICE_ACCOUNT_UNIVERSE_DOMAIN= ""
 
+"OriginalRepliedMessageSender=whatsapp%3A%2B14155238886
 ExternalUserId=whatsapp%3AID.4566546130240823
-&SmsMessageSid=SMcae9155b4098c3641368a8c27351fde1&NumMedia=0
-&ProfileName=teknisee
-&MessageType=text
-&SmsSid=SMcae9155b4098c3641368a8c27351fde1
-&WaId=6285176810035
-&SmsStatus=received
-&Body=Ga
-&To=whatsapp%3A%2B14155238886
-&NumSegments=1
-&ReferralNumMedia=0
-&MessageSid=SMcae9155b4098c3641368a8c27351fde1
-&AccountSid=ACefb707f7c4ce4d15bc4261fd1d5ed615&ChannelMetadata=%7B%22type%22%3A%22whatsapp%22%2C%22data%22%3A%7B%22context%22%3A%7B%22ProfileName%22%3A%22teknisee%22%2C%22WaId%22%3A%226285176810035%22%7D%7D%7D&From=whatsapp%3A%2B6285176810035&ApiVersion=2010-04-01
+SmsMessageSid=SM8824d91645395b17594d92659b878468
+FrequentlyForwarded=false
+NumMedia=0
+ProfileName=teknisee
+MessageType=interactive
+SmsSid=SM8824d91645395b17594d92659b878468
+WaId=6285176810035
+SmsStatus=received
+Body=Konfirmasi
+Forwarded=false
+ButtonText=Konfirmasi
+To=whatsapp%3A%2B14155238886
+ButtonPayload=%7BverifyEmail%3Aasd%40asd.com%7D
+NumSegments=1
+ReferralNumMedia=0
+MessageSid=SM8824d91645395b17594d92659b878468
+AccountSid=ACefb707f7c4ce4d15bc4261fd1d5ed615
+OriginalRepliedMessageSid=MM5cc44eecf7dab0d48d4529d0fa4af44d
+ChannelMetadata=%7B%22type%22%3A%22whatsapp%22%2C%22data%22%3A%7B%22context%22%3A%7B%22ButtonText%22%3A%22Konfirmasi%22%2C%22Forwarded%22%3A%22false%22%2C%22FrequentlyForwarded%22%3A%22false%22%2C%22ProfileName%22%3A%22teknisee%22%2C%22WaId%22%3A%226285176810035%22%7D%7D%7D
+From=whatsapp%3A%2B6285176810035&ApiVersion=2010-04-01"
