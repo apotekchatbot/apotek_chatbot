@@ -198,39 +198,6 @@ export default function DashboardPage() {
         style={{ background: "rgba(93,202,165,0.08)", filter: "blur(80px)" }}
       />
 
-      {/* ════════ HEADER ════════ */}
-      <header
-        className="relative z-20 flex h-[60px] items-center justify-between border-b px-4 sm:px-6 md:px-10"
-        style={glassHeader}
-      >
-        <div className="flex items-center gap-2.5">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[9px] bg-[#1D9E75]">
-            <Pill size={17} className="text-white" aria-hidden="true" />
-          </div>
-          <span className="text-[15px] font-medium tracking-tight">
-            <span className="text-[#111]">Apotek</span>
-            <span className="text-[#0F6E56]">Bot</span>
-          </span>
-        </div>
-
-        <div className="flex items-center gap-3">
-          <button
-            onClick={handleLogout}
-            className="flex items-center gap-1.5 rounded-full border px-4 text-[13px] font-medium text-[#0F6E56] transition-all duration-150 hover:bg-white"
-            style={{
-              height: "36px",
-              background: "rgba(255,255,255,0.85)",
-              backdropFilter: "blur(8px)",
-              WebkitBackdropFilter: "blur(8px)",
-              borderColor: "rgba(29,158,117,0.35)",
-            }}
-          >
-            <LogOut size={14} aria-hidden="true" />
-            Keluar
-          </button>
-        </div>
-      </header>
-
       {/* ════════ MAIN ════════ */}
       <main className="relative z-[1] flex min-h-[calc(100vh-60px)] flex-col items-center px-4 py-10 sm:px-6 sm:py-14">
         {success && (
