@@ -1,5 +1,6 @@
 // app/api/test/route.ts
 import { NextResponse } from "next/server";
+import { log } from "@/lib/logger";
 
 interface SalesRequestBody {
   namaObat: string;
@@ -15,15 +16,7 @@ export async function POST(request: Request) {
     const { isValid, error, data } = validateSalesBody(body);
 
     if (!isValid) {
-      console.error(
-        JSON.stringify({
-          level: "error",
-          message: "Input penjualan tidak valid",
-          service: "api-test",
-          error: error,
-          payload: body,
-        }),
-      );
+      log.error("api-test", "Input penjualan tidak valid", error, body);
 
       return NextResponse.json(
         {
@@ -37,18 +30,7 @@ export async function POST(request: Request) {
       );
     }
 
-    console.log(
-      JSON.stringify({
-        level: "info",
-        message: "Input penjualan diterima",
-        service: "api-test",
-        payload: {
-          obat: data?.namaObat,
-          harga: data?.harga,
-          stok: data?.stok,
-        },
-      }),
-    );
+    log.info("api-test", "Input penjualan diterima", data);
 
     // Mengembalikan data yang sama beserta status sukses
     return NextResponse.json(
@@ -62,14 +44,8 @@ export async function POST(request: Request) {
     );
   } catch (error) {
     // Antisipasi jika Postman mengirimkan body yang kosong atau bukan format JSON
-    console.error(
-      JSON.stringify({
-        level: "error",
-        message: "Gagal membaca data",
-        service: "api-test",
-        error: error instanceof Error ? error.message : String(error),
-      }),
-    );
+    log.error("api-test", "Gagal membaca data", error, { body: request.body });
+
     return NextResponse.json(
       {
         status: "error",

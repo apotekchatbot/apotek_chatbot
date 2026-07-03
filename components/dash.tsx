@@ -17,12 +17,6 @@ import {
 const DAFTAR_OBAT = [
   { id: "OBT001", nama: "Amoxicillin 500mg" },
   { id: "OBT002", nama: "Paracetamol 500mg" },
-  { id: "OBT003", nama: "Ibuprofen 400mg" },
-  { id: "OBT004", nama: "Cetirizine 10mg" },
-  { id: "OBT005", nama: "Omeprazole 20mg" },
-  { id: "OBT006", nama: "Metformin 500mg" },
-  { id: "OBT007", nama: "Amlodipine 5mg" },
-  { id: "OBT008", nama: "Simvastatin 20mg" },
 ];
 
 /* ── Types ── */
