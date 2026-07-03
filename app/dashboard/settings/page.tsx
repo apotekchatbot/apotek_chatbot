@@ -177,6 +177,7 @@ export default function SettingsPage() {
             <input
               type="text"
               placeholder="Contoh: Apotek Sehat Sejahtera"
+              required
               value={apotekNama}
               onChange={(e) => setApotekNama(e.target.value)}
               className="w-full rounded-xl border px-3.5 py-2 text-[14px] outline-none focus:border-[#1D9E75] focus:ring-2 focus:ring-[rgba(29,158,117,0.15)] bg-transparent"
@@ -204,6 +205,7 @@ export default function SettingsPage() {
               type="text"
               placeholder="Masukkan Google Sheets ID..."
               value={spreadsheetId}
+              required
               onChange={(e) => {
                 setSpreadsheetId(e.target.value);
                 setSpreadsheetVerified(false); // Reset status jika user mengetik ID baru
@@ -245,6 +247,7 @@ export default function SettingsPage() {
               type="tel"
               placeholder="Contoh: +628123456789"
               value={waNumber}
+              required
               disabled={waVerified}
               onChange={(e) => setWaNumber(e.target.value)}
               className="w-full rounded-xl border px-3.5 py-2 text-[14px] outline-none focus:border-[#1D9E75] focus:ring-2 focus:ring-[rgba(29,158,117,0.15)] bg-transparent disabled:bg-gray-100 disabled:opacity-60"

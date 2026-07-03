@@ -35,7 +35,7 @@ export async function POST(req: Request) {
 
     // Mengirim pesan
     const message = await client.messages.create({
-      from: "whatsapp:+14155238886",
+      from: twilioPhone,
       contentSid: "HXb5d07231ffbc3779855f607da159f707", //template untuk dua opsi
       contentVariables:
         '{"1":"Kimia Farma","2":"Amoxcilin, Omeprazole","3":"apakah kamu sudah merasa baikan?","4":"Sudah","5":"Belum"}',
