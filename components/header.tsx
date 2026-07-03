@@ -38,7 +38,7 @@ export default function Header() {
         <Link href="/">Kontak</Link>
         <Link href="/">Tentang</Link>
         <Show when="signed-in">
-          <Link href="/settings">Settings</Link>
+          <Link href="/dashboard/settings">Settings</Link>
         </Show>
       </div>
 
