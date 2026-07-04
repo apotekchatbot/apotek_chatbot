@@ -1,3 +1,11 @@
+/**
+ * app/api/belanja/route.ts
+ * tulis belanja di ss lembar belanja
+ * todo: ambil obat pertama, cek pertanyaan dan opsi jawaban di ss lembar belanja (setiap obat punya pertanyana dan opsi jawaban)
+ * todo: berdasarkan jumlah opsi, kirim pesan wa dengan template yang sudah disiapkan
+ * todo: tulis pesan ke ss lembar respon
+ * todo: panggil worker untuk menghitung waktu
+ */
 import { google } from "googleapis";
 import { NextResponse } from "next/server";
 import { log } from "@/lib/logger";

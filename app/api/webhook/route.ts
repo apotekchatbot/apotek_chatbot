@@ -86,7 +86,7 @@ export async function POST(req: Request) {
     const verifyMatch = jawaban.match(/\{verifyEmail:(.+?)\}/);
 
     if (verifyMatch && verifyMatch[1]) {
-      const extractedEmail = verifyMatch[1].trim(); // Mendapatkan asd@asd.com
+      const extractedEmail = verifyMatch[1].trim(); // Mendapatkan email. ex:asd@asd.com
 
       // Eksekusi fungsi update Clerk
       const isSuccess = await verifyUserWhatsApp(extractedEmail, no_wa);
@@ -96,6 +96,14 @@ export async function POST(req: Request) {
       } else {
         messageReply = `❌ Gagal memverifikasi. Akun dengan email ${extractedEmail} tidak ditemukan dalam sistem kami.`;
       }
+    }
+
+    // on test
+    const testMatch = jawaban.match(/\{test:(.+?)\}/);
+    if (testMatch && testMatch[1]) {
+      const extractedPayload = testMatch[1].trim(); // Mendapatkan email. ex:asd@asd.com
+
+      messageReply = `test berhasi dengan payload: ${extractedPayload}.`;
     }
 
     // 6. Memberikan balasan otomatis ke pasien menggunakan format XML (TwiML)

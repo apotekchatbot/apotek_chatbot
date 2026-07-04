@@ -99,15 +99,18 @@ async function sendTwilioVerification(
       ? wa_number
       : `whatsapp:${wa_number}`;
 
-    // Membawa variabel ke dalam format stringified JSON yang aman dari karakter kutip ganda
+    //conten template id
+    const ContentSID = "HXa9846283042ca4932a2a1b686c5c3691";
+    //variabel
     const variables = JSON.stringify({
-      "1": apotek_nama,
-      "2": email,
+      "1": apotek_nama, // akan diisi ke body, ex: ...di apotek {{1}}.
+      "2": "Konfirmasi", // tekt pada button
+      "3": `{verifyEmail:${email}}`, // menjadi id button format {verifyEmail:{{3}}}
     });
-
+    //send message
     const message = await client.messages.create({
       from: twilioPhone,
-      contentSid: "HXcefb60ecd8306c9ec485fca1dd0e03dd",
+      contentSid: ContentSID,
       contentVariables: variables,
       to: formattedNumber,
     });
