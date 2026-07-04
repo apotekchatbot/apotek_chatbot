@@ -62,11 +62,9 @@ Agar data tidak rusak oleh kelalaian manusia (staf apotek), struktur Google Shee
 - pertanyaan
   satu pertanyaan yang akan dikirim ke pasien, dibuat dan diisi manual oleh apoteker cabang
 - respon_opsi
-  daftar opsi jawaban yang akan dikirim ke pasien, dibuat dan diisi manual oleh apoteker cabang. opsi jawaban dipisahkan dengan tanda (;) misal : mual ;normal atau 1 ;2 ; 3.
-- respon_base_action
-  banyak respon harus sama dengan pilihan opsi jawban. setiap jawaban akan dikategorikan menjadi 2 kategori : Aman atau Bahaya.
+  daftar opsi jawaban yang akan dikirim ke pasien, dibuat dan diisi manual oleh apoteker cabang. opsi jawaban dipisahkan dengan tanda (;).setiap jawaban akan dikategorikan menjadi 2 kategori : Aman atau Bahaya.
   bahaya akan diberi flag ditandai dengan tanda bintang (*) di depan jawaban. flag akan memicu notifikasi ke apoteker cabang terkait. jawaban yang tidak ada di daftar opsi akan dianggap "Aman" dan tidak akan diteruskan ke apoteker cabang.
-  misal : *mual bukanlah hal biasa, kamu akan dihubungi apoteker cabang untuk konsultasi lebih lanjut ; lekas sembuh, tidak ada keluhan
+  *Mual lambung ; Pusing ringan ; Tidak ada keluhan
 
 #### sheet 2: daftar belanja pasien
 
@@ -173,3 +171,9 @@ AccountSid=ACefb707f7c4ce4d15bc4261fd1d5ed615
 OriginalRepliedMessageSid=MM5cc44eecf7dab0d48d4529d0fa4af44d
 ChannelMetadata=%7B%22type%22%3A%22whatsapp%22%2C%22data%22%3A%7B%22context%22%3A%7B%22ButtonText%22%3A%22Konfirmasi%22%2C%22Forwarded%22%3A%22false%22%2C%22FrequentlyForwarded%22%3A%22false%22%2C%22ProfileName%22%3A%22teknisee%22%2C%22WaId%22%3A%226285176810035%22%7D%7D%7D
 From=whatsapp%3A%2B6285176810035&ApiVersion=2010-04-01"
+
+mari berdiskusi, jangan berikan kode sebelum saya minta.
+
+secara garis besar project ini sudah mendekati final.
+
+dari apoteker yang input belanjaan, sistem akan menulis belanjaan ke ss di api/belanja. di api/belanja juga sistem akan melihat obat pertama, cek pertanyaan dan respon opsi

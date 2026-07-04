@@ -1,3 +1,4 @@
+// app/api/save-setting/route.ts
 import { clerkClient } from "@clerk/nextjs/server";
 import { google } from "googleapis";
 import { NextResponse } from "next/server";
@@ -84,6 +85,7 @@ async function sendTwilioVerification(
   wa_number: string,
   email: string,
   apotek_nama: string,
+  spreadsheet_id: string, // Parameter baru
 ) {
   try {
     const accountSid = process.env.TWILIO_ACCOUNT_SID;
@@ -101,13 +103,14 @@ async function sendTwilioVerification(
 
     //conten template id
     const ContentSID = "HXa9846283042ca4932a2a1b686c5c3691";
-    //variabel
+
+    // Variabel dengan payload baru
     const variables = JSON.stringify({
-      "1": apotek_nama, // akan diisi ke body, ex: ...di apotek {{1}}.
-      "2": "Konfirmasi", // tekt pada button
-      "3": `{verifyEmail:${email}}`, // menjadi id button format {verifyEmail:{{3}}}
+      "1": apotek_nama,
+      "2": "Konfirmasi",
+      "3": `{verifyEmail:${email}|sid:${spreadsheet_id}}`, // Format baru: {verifyEmail:email|sid:id}
     });
-    //send message
+
     const message = await client.messages.create({
       from: twilioPhone,
       contentSid: ContentSID,
@@ -117,7 +120,7 @@ async function sendTwilioVerification(
 
     log.info(
       "save-setting -> send-twilio-verification",
-      "Pesan konfirmasi berhasil dipicu ke Twilio",
+      "Pesan konfirmasi berhasil dipicu",
       {
         sid: message.sid,
         to: wa_number,
@@ -180,11 +183,12 @@ export async function POST(req: Request) {
     };
 
     // 4. Trigger pengiriman pesan Twilio secara asinkron (Non-blocking) jika nomor diinput
-    if (formattedWaNumber) {
+    if (formattedWaNumber && isSpreadsheetValid && updatedMeta.spreadsheet_id) {
       sendTwilioVerification(
         formattedWaNumber,
         email,
         updatedMeta.apotek_nama || "Apoteker",
+        updatedMeta.spreadsheet_id,
       );
     }
 

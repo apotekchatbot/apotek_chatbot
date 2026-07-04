@@ -9,6 +9,7 @@ interface SendChatParams {
   pasien_wa: string;
   apotek_nama: string;
   obat_id: string;
+  obat_list: string;
 }
 
 /**
@@ -21,6 +22,7 @@ export async function triggerChatPertanyaan({
   pasien_wa,
   apotek_nama,
   obat_id,
+  obat_list,
 }: SendChatParams) {
   try {
     // 1. Inisialisasi Google Auth
@@ -43,13 +45,16 @@ export async function triggerChatPertanyaan({
     });
     const sheets = google.sheets({ version: "v4", auth });
 
-    // 2. Ambil detail obat dari sheet 'obat'
+    // 2. Ambil seluruh data dari sheet 'obat'
     const getObatRes = await sheets.spreadsheets.values.get({
       spreadsheetId,
-      range: "obat!A:F", // Sesuaikan jika range kolom Anda lebih lebar
+      range: "obat!A:F",
     });
 
-    const barisObat = getObatRes.data.values?.find((row) => row[0] === obat_id);
+    const allObatData = getObatRes.data.values || [];
+
+    // Mencari data obat utama (yang sedang ditanyakan saat ini)
+    const barisObat = allObatData.find((row) => row[0] === obat_id);
     if (!barisObat) {
       throw new Error(
         `Obat dengan ID ${obat_id} tidak ditemukan di sheet 'obat'`,
@@ -59,6 +64,24 @@ export async function triggerChatPertanyaan({
     const obat_nama = barisObat[1] || "Obat";
     const pertanyaan = barisObat[3] || "Apakah Anda sudah merasa baikan?";
     const opsiMentah = barisObat[4] || "";
+
+    // ═══════════════════════════════════════════════════════════════
+    // 3. TRANSLASI DAFTAR KODE MENJADI DAFTAR NAMA
+    // ═══════════════════════════════════════════════════════════════
+    const rawListIds = obat_list
+      .split(";")
+      .map((id) => id.trim())
+      .filter(Boolean);
+
+    const listNamaObat = rawListIds.map((id) => {
+      const match = allObatData.find((row) => row[0] === id);
+      // Jika ID ditemukan di database, ambil namanya (kolom indeks 1)
+      // Jika karena alasan tertentu tidak ditemukan, fallback menggunakan ID aslinya
+      return match && match[1] ? match[1] : id;
+    });
+
+    // Menggabungkan array nama menjadi string rapi: "Bodrex, Paracetamol, Vitamin C"
+    const obat_list_names = listNamaObat.join(", ");
 
     // 3. Parsing dan Pembersihan Opsi (Fallback Kuat)
     const rawOptions = opsiMentah
@@ -81,9 +104,9 @@ export async function triggerChatPertanyaan({
       .padStart(4, "0");
     const chat_id = `C-${dateStr}-${randomHex}`;
 
-    // Helper untuk merakit hidden payload: {cid:C-XXXX|ans:Jawaban}
-    // Opsi dipotong maksimal 20 karakter agar tombol WhatsApp tidak error
-    const createPayload = (opt: string) => `{cid:${chat_id}|ans:${opt}}`;
+    // Helper untuk merakit hidden payload:
+    const createPayload = (opt: string) =>
+      `{cid:${chat_id}|sid:${spreadsheetId}|ans:${opt}}`;
     const cleanDisplayText = (opt: string) =>
       opt.replace(/^\*/, "").substring(0, 20);
 
@@ -102,8 +125,8 @@ export async function triggerChatPertanyaan({
       contentSid = "HX9162f0efd27ef42ae0506bc13bf38726";
       variablesObj = {
         "1": apotek_nama,
-        "2": obat_nama,
-        "3": pertanyaan,
+        "2": obat_list_names,
+        "3": `Untuk obat ${obat_nama}: ${pertanyaan}`,
         "4": cleanDisplayText(options[0]),
         "5": createPayload(options[0]),
         "6": cleanDisplayText(options[1]),
@@ -113,8 +136,8 @@ export async function triggerChatPertanyaan({
       contentSid = "HXfcc3beb71bab5f322274524c5977e97e"; // 3 Options
       variablesObj = {
         "1": apotek_nama,
-        "2": obat_nama,
-        "3": pertanyaan,
+        "2": obat_list_names,
+        "3": `Untuk obat ${obat_nama}: ${pertanyaan}`,
         "4": cleanDisplayText(options[0]),
         "5": createPayload(options[0]),
         "6": cleanDisplayText(options[1]),
