@@ -2,6 +2,7 @@
 import { google } from "googleapis";
 import twilio from "twilio";
 import { log } from "@/lib/logger";
+import { Client } from "@upstash/qstash";
 
 interface SendChatParams {
   spreadsheetId: string;
@@ -218,11 +219,42 @@ export async function triggerChatPertanyaan({
 
     // Beritahu pemanggil bahwa siklus ini gagal secara fatal
     if (deliveryStatus === "failed") {
+      log.debug(
+        "chat-service -> chat-delivery",
+        "Gagal mengirim pesan, nomor mungkin tidak valid.",
+        { chat_id },
+      );
       return {
         success: false,
         error: "Gagal mengirim pesan, nomor mungkin tidak valid.",
         chat_id,
       };
+    }
+
+    try {
+      const qstash = new Client({ token: process.env.QSTASH_TOKEN! });
+
+      await qstash.publishJSON({
+        url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/timeout`,
+        body: {
+          chat_id,
+          spreadsheetId,
+          belanja_id,
+          pasien_wa,
+        },
+        delay: "1m", // Format delay sangat simpel!
+      });
+
+      log.info(
+        "chat-service",
+        `Jadwal penutupan otomatis (8 jam) didaftarkan untuk chat ${chat_id}`,
+        null,
+      );
+    } catch (qErr) {
+      // Kita tidak melempar error agar kegagalan QStash tidak merusak alur utama
+      log.debug("chat-service -> upstash", "Gagal mendaftarkan timer QStash", {
+        qErr,
+      });
     }
 
     return { success: true, chat_id };
