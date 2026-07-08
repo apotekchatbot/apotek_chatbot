@@ -125,7 +125,6 @@ export function PurchaseForm({ spreadsheetId, isDisabled }: PurchaseFormProps) {
       pasien_wa: wa,
       belanja_list_obat,
     };
-
     try {
       const response = await fetch("/api/belanja", {
         method: "POST",

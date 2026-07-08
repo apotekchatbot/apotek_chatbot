@@ -182,8 +182,46 @@ export async function POST(req: Request) {
       spreadsheet_verified: isSpreadsheetValid,
     };
 
-    // 4. Trigger pengiriman pesan Twilio secara asinkron (Non-blocking) jika nomor diinput
+    // 4. Trigger penulisan nama apotek ke Sheets & kirim pesan Twilio
     if (formattedWaNumber && isSpreadsheetValid && updatedMeta.spreadsheet_id) {
+      try {
+        const auth = new google.auth.GoogleAuth({
+          credentials: {
+            client_email: process.env.GOOGLE_SERVICE_ACCOUNT_CLIENT_EMAIL,
+            private_key:
+              process.env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY?.replace(
+                /\\n/g,
+                "\n",
+              ),
+          },
+          scopes: ["https://www.googleapis.com/auth/spreadsheets"],
+        });
+        const sheets = google.sheets({ version: "v4", auth });
+
+        await sheets.spreadsheets.values.update({
+          spreadsheetId: updatedMeta.spreadsheet_id,
+          range: "setting!B2",
+          valueInputOption: "USER_ENTERED",
+          requestBody: {
+            values: [[updatedMeta.apotek_nama]],
+          },
+        });
+
+        log.debug(
+          "save-setting",
+          "Nama apotek berhasil disinkronkan ke setting!B2",
+        );
+      } catch (sheetErr) {
+        // Log error jika gagal nulis ke sheet, tapi biarkan alur Twilio tetap berjalan
+        log.error(
+          "save-setting",
+          "Gagal menulis nama apotek ke sheet setting!B2",
+          sheetErr,
+          null,
+        );
+      }
+      // ═══════════════════════════════════════════════════════════════
+
       sendTwilioVerification(
         formattedWaNumber,
         email,

@@ -1,17 +1,8 @@
-/**
- * app/api/belanja/route.ts
- * tulis belanja di ss lembar belanja
- * todo: ambil obat pertama, cek pertanyaan dan opsi jawaban di ss lembar belanja (setiap obat punya pertanyana dan opsi jawaban)
- * todo: berdasarkan jumlah opsi, kirim pesan wa dengan template yang sudah disiapkan
- * todo: tulis pesan ke ss lembar respon
- * todo: panggil worker untuk menghitung waktu
- */
 // app/api/belanja/route.ts
 import { google } from "googleapis";
 import { NextResponse } from "next/server";
 import { log } from "@/lib/logger";
 import { triggerChatPertanyaan } from "@/lib/services/chat-service";
-import { clerkClient } from "@clerk/nextjs/server";
 
 // ═══════════════════════════════════════════════════════════════
 // FUNGSI HELPER: Standarisasi Nomor WhatsApp
@@ -51,7 +42,6 @@ export async function POST(req: Request) {
       pasien_durasi,
       pasien_wa, // Nomor mentah dari frontend
       belanja_list_obat,
-      email,
     } = body;
 
     if (!spreadsheetId) {
@@ -86,17 +76,6 @@ export async function POST(req: Request) {
       );
     }
 
-    // --- Ambil Nama Apotek dari Clerk ---
-    let apotek_nama = "Apotek Kami";
-    if (email) {
-      const client = await clerkClient();
-      const users = await client.users.getUserList({ emailAddress: [email] });
-      if (users.data.length > 0) {
-        const meta = users.data[0].publicMetadata as { apotek_nama?: string };
-        apotek_nama = meta.apotek_nama || apotek_nama;
-      }
-    }
-
     // --- Pembuatan belanja_id ---
     const now = new Date();
     const dateStr = now.toISOString().slice(0, 10).replace(/-/g, ""); // YYYYMMDD
@@ -123,6 +102,26 @@ export async function POST(req: Request) {
     });
 
     const sheets = google.sheets({ version: "v4", auth });
+
+    // ═══════════════════════════════════════════════════════════════
+    // PERUBAHAN: Ambil Nama Apotek secara dinamis dari sheet setting!B2
+    // ═══════════════════════════════════════════════════════════════
+    let apotek_nama = "Apotek";
+    try {
+      const settingData = await sheets.spreadsheets.values.get({
+        spreadsheetId,
+        range: "setting!B2",
+      });
+      apotek_nama = settingData.data.values?.[0]?.[0] || "Apotek";
+    } catch (sheetErr) {
+      log.error(
+        "add-belanja",
+        "Gagal mengambil nama apotek dari setting!B2, menggunakan fallback",
+        sheetErr,
+        null,
+      );
+    }
+    // ═══════════════════════════════════════════════════════════════
 
     // --- Penulisan ke Baris Baru (Append) ---
     const result = await sheets.spreadsheets.values.append({
@@ -157,7 +156,7 @@ export async function POST(req: Request) {
         spreadsheetId,
         belanja_id,
         pasien_wa: formatted_wa, // Meneruskan nomor rapi ke Twilio service
-        apotek_nama,
+        apotek_nama, // Sekarang berisi string dari setting!B2
         obat_id: obatPertama,
         obat_list: belanja_list_obat,
       });

@@ -246,7 +246,7 @@ export async function POST(req: Request) {
             }
 
             // ═══════════════════════════════════════════════════════════════
-            // EKSEKUSI: Panggil Service Notifikasi Apoteker (Ditambahkan di sini)
+            // EKSEKUSI: Panggil Service Notifikasi Apoteker
             // ═══════════════════════════════════════════════════════════════
             await notifyPharmacist({
               spreadsheetId,
@@ -265,12 +265,23 @@ export async function POST(req: Request) {
               "Terima kasih atas informasinya. Beberapa keluhan Anda telah kami catat sebagai prioritas. Apoteker kami akan segera menghubungi Anda untuk konsultasi lebih lanjut. Mohon hentikan sementara penggunaan obat tersebut hingga ada arahan.";
             twimlResponse = `<Response><Message>${emergencyReply}</Message></Response>`;
           } else if (nextObatId) {
+            // ═══════════════════════════════════════════════════════════════
+            // PERUBAHAN DI SINI: Ambil nama apotek dari sheet setting!B2
+            // ═══════════════════════════════════════════════════════════════
+            const settingData = await sheets.spreadsheets.values.get({
+              spreadsheetId,
+              range: "setting!B2",
+            });
+            const apotekNamaTerpusat =
+              settingData.data.values?.[0]?.[0] || "Apotek";
+            // ═══════════════════════════════════════════════════════════════
+
             // Jika AMAN dan masih ada obat, teruskan antrean
             await triggerChatPertanyaan({
               spreadsheetId,
               belanja_id,
               pasien_wa: no_wa,
-              apotek_nama: `Apotek (${apotek_petugas})`,
+              apotek_nama: apotekNamaTerpusat, // Menggunakan nama apotek dari setting!B2
               obat_id: nextObatId,
               obat_list: list_obat_raw,
             });
@@ -290,7 +301,7 @@ export async function POST(req: Request) {
       headers: { "Content-Type": "text/xml" },
     });
   } catch (error) {
-    log.error("twilio-webhook", "Gagal memproses webhook", error, null);
+    log.error("twilio-webhook", "Gagal memprocess webhook", error, null);
     return new NextResponse(`<Response></Response>`, {
       status: 200,
       headers: { "Content-Type": "text/xml" },

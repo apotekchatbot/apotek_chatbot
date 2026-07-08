@@ -62,8 +62,9 @@ export async function triggerChatPertanyaan({
       );
     }
 
-    const obat_nama = barisObat[1] || "Obat";
-    const pertanyaan = barisObat[3] || "Apakah Anda sudah merasa baikan?";
+    const obat_nama = barisObat[1] || "*paracetamol*"; // Fallback nama obat
+    const penjelasan = barisObat[2] || "*ini adalah obat generik*";
+    const pertanyaan = barisObat[3] || "*Apakah Anda sudah merasa baikan?*";
     const opsiMentah = barisObat[4] || "";
 
     // ═══════════════════════════════════════════════════════════════
@@ -123,28 +124,33 @@ export async function triggerChatPertanyaan({
         "3": createPayload(options[0]),
       };
     } else if (options.length === 2) {
-      contentSid = "HX9162f0efd27ef42ae0506bc13bf38726";
+      // 2 option
+      contentSid = "HXbf57c1f218ca1ca1f71d07c7eb1dccd6";
       variablesObj = {
         "1": apotek_nama,
         "2": obat_list_names,
-        "3": `Untuk obat ${obat_nama}: ${pertanyaan}`,
-        "4": cleanDisplayText(options[0]),
-        "5": createPayload(options[0]),
-        "6": cleanDisplayText(options[1]),
-        "7": createPayload(options[1]),
+        "3": obat_nama,
+        "4": penjelasan,
+        "5": pertanyaan,
+        "6": cleanDisplayText(options[0]),
+        "7": createPayload(options[0]),
+        "8": cleanDisplayText(options[1]),
+        "9": createPayload(options[1]),
       };
     } else {
-      contentSid = "HXfcc3beb71bab5f322274524c5977e97e"; // 3 Options
+      contentSid = "HX4bb0eac5e6eb460def8d8810e8087d32"; // 3 Options
       variablesObj = {
         "1": apotek_nama,
         "2": obat_list_names,
-        "3": `Untuk obat ${obat_nama}: ${pertanyaan}`,
-        "4": cleanDisplayText(options[0]),
-        "5": createPayload(options[0]),
-        "6": cleanDisplayText(options[1]),
-        "7": createPayload(options[1]),
-        "8": cleanDisplayText(options[2]),
-        "9": createPayload(options[2]),
+        "3": obat_nama,
+        "4": penjelasan,
+        "5": pertanyaan,
+        "6": cleanDisplayText(options[0]),
+        "7": createPayload(options[0]),
+        "8": cleanDisplayText(options[1]),
+        "9": createPayload(options[1]),
+        "10": cleanDisplayText(options[2]),
+        "11": createPayload(options[2]),
       };
     }
     // ... [Langkah 1 sampai 5 tetap sama seperti sebelumnya] ...
