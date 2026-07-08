@@ -175,6 +175,7 @@ export async function triggerChatPertanyaan({
       });
       deliveryStatus = message.status; // Biasanya 'queued' atau 'sent'
 
+      log.debug("chat-service", "", message);
       log.info(
         "chat-service",
         `Berhasil memicu pesan Twilio untuk obat ${obat_id}`,
@@ -220,7 +221,7 @@ export async function triggerChatPertanyaan({
     // Beritahu pemanggil bahwa siklus ini gagal secara fatal
     if (deliveryStatus === "failed") {
       log.debug(
-        "chat-service -> chat-delivery",
+        "chat-service",
         "Gagal mengirim pesan, nomor mungkin tidak valid.",
         { chat_id },
       );
@@ -242,11 +243,11 @@ export async function triggerChatPertanyaan({
           belanja_id,
           pasien_wa,
         },
-        delay: "1m", // Format delay sangat simpel!
+        delay: "3m", //TODO: ubah ke waktu yang diperlukan
       });
 
       log.info(
-        "chat-service",
+        "chat-service -> upstash",
         `Jadwal penutupan otomatis (8 jam) didaftarkan untuk chat ${chat_id}`,
         null,
       );

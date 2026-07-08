@@ -1,4 +1,4 @@
-import DashboardPage from "@/components/dash";
+// import DashboardPage from "@/components/dash";
 import HeroSection from "@/components/heroSection";
 import Image from "next/image";
 
