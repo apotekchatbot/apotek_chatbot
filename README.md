@@ -26,3 +26,5 @@ Sistem ini menjembatani interaksi antara apoteker (melalui panel internal) dan p
 
 - **Skrining Gejala Berbahaya:** Chatbot mampu mengevaluasi jawaban pasien untuk mendeteksi adanya efek samping kritis atau perburukan kondisi kesehatan.
 - **Notifikasi Instan untuk Apoteker:** Jika pasien melaporkan gejala yang masuk dalam kategori bahaya (_red flags_), sistem akan langsung memicu eskalasi dan memberikan notifikasi kepada apoteker agar dapat diambil tindakan medis segera.
+
+---
