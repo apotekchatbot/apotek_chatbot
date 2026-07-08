@@ -1,12 +1,7 @@
-import { clerkMiddleware } from "@clerk/nextjs/server";
+import type { NextConfig } from "next";
 
-export default clerkMiddleware();
-
-export const config = {
-  matcher: [
-    // Lewatkan semua fungsi internal Next.js dan file static (_next, gambar, dll)
-    "/((?!_next|[^?]*\\.[\\w]+$|_next/image|favicon.ico|sitemap.xml|robots.txt).*)",
-    // Selalu jalankan untuk API routes
-    "/(api|trpc)(.*)",
-  ],
+const nextConfig: NextConfig = {
+  /* config options here */
 };
+
+export default nextConfig;
